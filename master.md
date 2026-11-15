@@ -1,7 +1,7 @@
 # SocialBoost AI — Master Project Rules
 
 **Document:** `master.md`  
-**Version:** 1.0  
+**Version:** 1.1
 **Status:** Baseline project authority  
 **Product:** SocialBoost AI  
 **Market:** India first  
@@ -44,75 +44,77 @@ Every contributor and AI coding agent (including Codex) MUST follow these rules.
 
 ---
 
-## 2. Product definition
+## 2. Product vision and guardrails
 
-SocialBoost AI is a hybrid video-sharing and organic audience-growth platform for individuals, creators, viewers, and businesses.
+**Product promise:** Create once. Optimize intelligently. Reach more people.
 
-It has three product capabilities:
+SocialBoost AI is an AI-powered video content optimization, distribution, and discovery platform. Its primary goal is to help creators, individuals, and businesses maximize genuine organic reach and video views, including creators who have zero followers or subscribers. It is not simply another social networking application.
 
-1. **Owned video community:** users can publish and discover videos inside SocialBoost AI.
-2. **External distribution:** authorized users can publish approved content to supported third-party social platforms using their official APIs.
-3. **AI growth assistance:** AI can help analyze content, draft metadata, and provide evidence-based organic-growth suggestions.
+**Primary success metric:** Maximum genuine organic reach and views. This is a product objective, not a guarantee to users.
 
-### 2.1 Product principles
+### 2.1 Main user journey
 
-- Focus on genuine organic discovery and engagement.
-- Never generate fake views, fake followers, bot likes, spam comments, or artificial engagement.
-- Never promise viral reach or guaranteed audience growth.
-- Do not bypass social platform restrictions, API permissions, rate limits, or review processes.
-- User approval is required before an external publishing action.
-- Platform-specific analytics must remain clearly attributed to their source and definitions.
+1. A creator uploads a video.
+2. AI analyzes the video and its context and recommends improvements to its organic reach potential.
+3. AI generates platform-specific titles, hooks, captions, descriptions, and hashtags.
+4. The creator reviews, edits, and approves recommendations.
+5. The creator selects one or more destinations and explicitly approves external publishing.
+6. SocialBoost distributes the video through supported official platform APIs.
+7. SocialBoost's discovery engine can recommend it to relevant viewers, including people who do not follow the creator.
+8. The creator reviews available analytics and AI-driven improvement suggestions.
 
-### 2.2 Target users
+### 2.2 Core capabilities
 
-- Individual users and viewers.
-- Creators.
-- Businesses and their authorized team members.
-- Platform administrators and moderators.
+**AI content optimization** analyzes video content and relevant context. Recommendations may cover the first three seconds and hook, title and opening text, captions and descriptions, hashtags and keywords, format and aspect ratio, audience relevance, platform-specific optimization, and actionable discoverability improvements. All recommendations are editable and require creator approval.
 
-### 2.3 Product market
+**Creator-controlled distribution** plans support for Instagram Reels, YouTube Shorts, Facebook Reels, and the SocialBoost internal video platform. AI may recommend destinations and optimizations; creators choose destinations and approve publishing. Use only official, authorized APIs and respect permissions, OAuth requirements, app reviews, rate limits, API capabilities, and platform policies. Never use unauthorized browser automation, workarounds, or policy bypasses.
 
-- India-first launch.
-- Design for international expansion without adding unsupported localization or compliance features prematurely.
-- Store timestamps in UTC; display them in the user's configured timezone.
-- Do not hardcode India-specific assumptions into reusable domain logic.
+**SocialBoost organic discovery** includes an internal video feed and recommendation engine. Follower count must not be the sole or dominant discovery eligibility factor. Discovery may consider viewer interests and relevance, video content and topic, interactions and feedback, watch duration and completion, content quality and freshness, and safety, moderation, and anti-manipulation signals.
 
----
+### 2.3 Mandatory product guardrails
 
-## 3. Approved technology stack
+- Never generate or facilitate fake views, followers, likes, comments, or watch time; bots; engagement pods; spam; or artificial engagement.
+- Never guarantee virality, specific view counts, or audience growth, and never claim control over third-party ranking algorithms.
+- AI recommends; creators review, edit, and approve. Explicit creator approval is required before external publishing. AI output cannot authorize publishing or another privileged action.
+- Clearly distinguish SocialBoost metrics from third-party metrics. Preserve metric source, definitions, reporting period, and limitations.
+- A single user account can have multiple capabilities, such as creator and viewer. Do not create duplicate accounts for these capabilities.
+- Avoid unnecessary follower-management features and scope expansion before the core video journey is complete.
+
+## 3. Approved technology architecture
 
 Use these technologies unless a change is explicitly approved.
 
 | Area | Approved technology |
 |---|---|
-| Web frontend | React + TypeScript |
-| Mobile frontend | React Native + TypeScript |
+| Frontend | React + TypeScript web application first |
+| Mobile | React Native in a later phase |
 | Backend | Django + Django REST Framework |
 | Database | PostgreSQL |
 | Authentication | JWT with refresh-token rotation and revocation |
-| Background jobs | Celery |
-| Cache / broker | Redis |
-| AI local provider | Ollama with Qwen3 |
-| AI cloud provider | Provider adapter; provider selected by configuration |
+| Architecture | Modular monolith |
+| Background processing | Redis + Celery in a later phase |
+| AI integration | Provider abstraction |
+| Local AI development | Ollama with Qwen3 |
 | Video processing | FFmpeg |
-| Speech recognition | Whisper, when its phase is approved |
-| Media storage | S3-compatible object storage |
-| Video delivery | CDN and HLS, when media phase is approved |
-| Containers | Docker / Docker Compose |
+| Video storage | S3-compatible object storage |
+| Video delivery | CDN and HLS in a later phase |
+| External integrations | Official Instagram, YouTube, and Facebook APIs |
 | API documentation | OpenAPI using drf-spectacular |
-| Backend tests | pytest + pytest-django |
+| Testing | pytest + pytest-django |
+| Deployment | Cloud-first production architecture |
+| Development environment | Native Windows development first; Docker where available |
 | Version control | Git |
-| CI | GitHub Actions, when CI task is approved |
 
 ### 3.1 Architecture style
 
-- Use a **modular monolith**.
-- Keep Django apps separated by business capability.
-- Do not create microservices in the initial product.
+- Use a **modular monolith**. Do not introduce microservices without explicit approval.
+- Keep Django apps separated by business capability and introduce them only in their approved phase.
 - Keep domain logic independent from infrastructure providers where practical.
 - Use adapters for external social platforms and AI providers.
-- Use asynchronous workers for long-running tasks.
+- Use Redis and Celery for background processing only in the phase that introduces them.
 - Keep PostgreSQL as the source of truth.
+- Keep the AI provider layer modular so local Ollama can be used during development and other providers can be added through adapters later.
+- Backend validation and authorization enforce permissions. AI output never independently authorizes publishing or another privileged action.
 
 ### 3.2 Approved Django app boundaries
 
@@ -135,88 +137,52 @@ Create apps incrementally, only when their phase begins:
 
 Do not create empty apps simply to match this list. Do not create an app outside this list without approval.
 
----
+## 4. Locked development roadmap and phase gates
 
-## 4. Delivery phases and strict phase gates
+Work follows this sequence. A listed roadmap item is not authorization to start it.
 
-### Phase 1 — Foundation, identity, profiles, businesses
-
-Approved scope:
-
-- Repository and project setup.
-- Django backend and React web frontend setup.
+### Phase 1 — Foundation and project setup
+- Repository and project structure.
+- Django and React setup.
 - PostgreSQL configuration.
-- Docker development environment.
-- Custom user model.
-- Registration and authentication.
-- Email verification and password reset.
-- JWT authentication and refresh-token revocation.
-- User and creator profiles.
-- Business profiles and business membership.
-- Authorization and tests.
-- OpenAPI documentation.
+- Environment configuration and secret management.
+- Git readiness and baseline commit.
+- Development and governance documentation.
 
-Not included in Phase 1:
+### Phase 2 — Accounts and authentication
+- Custom User model before initial migrations, UUID primary key, normalized unique email, custom user manager, Django admin integration, account status, and timestamps.
+- JWT authentication with refresh rotation and revocation.
+- Role/capability foundation for individual, creator, viewer, business, and admin; profile foundation.
+- No social OAuth in this phase.
 
-- Video upload, video playback, transcoding, or streaming.
-- Social feed, likes, comments, follows, or recommendations.
-- Instagram, Facebook, YouTube, or other social integrations.
-- External publishing or scheduling.
-- AI agents, AI content generation, or analytics.
-- Monetization.
-- React Native implementation.
-- Production cloud deployment beyond approved preparation.
+### Phase 3 — Video upload and media pipeline
+- Video upload, file validation and size/type restrictions, storage integration, metadata extraction, FFmpeg processing, thumbnails, preview and playback, processing status and failure handling.
 
-### Phase 2 — Video platform
+### Phase 4 — AI content optimization
+- Ollama/Qwen3 and AI provider abstraction; video/context analysis; hook recommendations; titles, captions, descriptions, and hashtags; platform-specific recommendations; creator review, editing, and approval.
 
-Only after Phase 1 acceptance:
-- Video metadata and upload workflow.
-- Object storage integration.
-- Media validation and processing.
-- Thumbnail generation.
-- Playback and delivery.
-- Internal video feed and interactions, according to approved requirements.
+### Phase 5 — SocialBoost discovery and viewer experience
+- Internal video feed and relevance-based recommendations; discovery for new creators, including creators with zero followers; basic viewer interactions; moderation and discovery eligibility; impression, playback, watch-time, and completion event collection.
 
-### Phase 3 — External social integration and publishing
+### Phase 6 — External social connections and multi-platform publishing
+- OAuth integrations; secure token storage, refresh, and revocation; separate platform adapters; platform capabilities and permissions; destination selection and explicit creator approval; publishing jobs, status tracking, idempotency, and bounded retries; official APIs only.
 
-Only after Phase 2 acceptance:
-- OAuth account connections.
-- Official platform API adapters.
-- Permission and token management.
-- Publishing requests and jobs.
-- Scheduling, status tracking, and safe retries.
+### Phase 7 — Analytics and growth recommendations
+- Internal analytics; external analytics where officially available; metric attribution and definitions; performance comparisons; AI-powered growth recommendations.
 
-### Phase 4 — AI assistance
+### Phase 8 — Production hardening and mobile
+- Redis/Celery; production storage and CDN; HLS delivery; monitoring and audit logs; backups and recovery; security review; load and performance testing; production deployment; React Native application.
 
-Only after the relevant video and publishing workflows are stable:
-- AI provider abstraction.
-- Ollama integration.
-- Configurable cloud provider.
-- Content analysis and metadata generation.
-- User review and approval.
+### 4.1 Approval gates
 
-### Phase 5 — Analytics and recommendations
-
-Only after reliable event and analytics data exists:
-- Internal analytics.
-- Permitted external analytics.
-- Feed ranking and recommendations.
-- Organic-growth suggestions.
-
-### Phase 6 — Production hardening and mobile
-
-Only after scope approval:
-- Production deployment and scaling.
-- Security and load testing.
-- Monitoring and backup validation.
-- React Native application.
-- Operational readiness.
-
-**Phase gate:** Do not begin a later phase until the current phase's acceptance criteria and tests pass and the project owner explicitly approves progression.
+- The project owner approves the active phase and task. Work only on that scope and never jump ahead.
+- A phase is not complete merely because its implementation appears finished. Review its approved acceptance criteria and relevant tests, report results and outstanding issues, and request the project owner's explicit approval to proceed.
+- Do not start the next phase until the owner explicitly approves progression. Approval of one task does not approve later tasks or phases.
+- Stop after the approved task and wait for the owner's next instruction.
 
 ---
 
-## 5. Phase 1 implementation rules
+## 5. Foundation and implementation rules
 
 ### 5.1 Initial project layout
 
@@ -252,13 +218,11 @@ Create directories and files only when needed. Do not add placeholder files with
 
 - Implement the custom Django user model before the first project migration.
 - Set `AUTH_USER_MODEL = "accounts.User"` before generating initial migrations.
-- Use `AbstractBaseUser` and `PermissionsMixin`.
-- Implement a correct custom user manager.
-- Use normalized unique email as the login identifier.
-- Do not use Django's default username as the authentication identifier.
-- Use UUID primary keys.
-- Include explicit account status and timestamps.
-- Implement staff/superuser behavior correctly for Django admin.
+- Use Django `AbstractBaseUser` only. Do not use `PermissionsMixin`.
+- Use UUID primary keys and normalized unique email as the login identifier.
+- Implement a custom user manager, account status, and timestamps.
+- Do not use Django default username as the authentication identifier.
+- Implement only admin/staff behavior required by the approved design. If Django admin integration requires user-model decisions not documented here, obtain project-owner approval before making them.
 - Use `settings.AUTH_USER_MODEL` for user foreign keys in every app.
 - Never replace or redesign the user model after migrations have been applied without an approved migration strategy.
 
@@ -414,10 +378,8 @@ A task is complete only when its implementation, tests, documentation, and accep
 Suggested branch naming:
 
 - `feature/phase-1-project-setup`
-- `feature/phase-1-authentication`
-- `feature/phase-1-profiles`
-- `feature/phase-1-businesses`
-- `fix/<short-description>`
+- `feature/phase-2-accounts-auth`
+- `feature/phase-3-video-upload`
 
 ---
 
@@ -453,35 +415,24 @@ Every task must satisfy all applicable items:
 
 ## 12. Current project execution state
 
-**Current phase:** Phase 1 — Foundation  
-**Current sprint:** Sprint 1 — Project foundation  
-**Current task:** Initial repository and environment inspection, followed by project setup  
-**Completed:** Codex extension installed in VS Code  
-**Not yet confirmed:** Repository location, existing project files, Python version, Node.js version, Docker availability, PostgreSQL availability, Git status
+**Current phase:** Phase 1 — Foundation and project setup
+**Current sprint:** Sprint 1 — Project foundation
+**Current status:** Phase 1 technical setup has been implemented and checked. Django system check passed; PostgreSQL connection verified; React production build passed; environment and secret-handling checks performed.
 
-### Immediate next task
+- No application migrations have been created or applied.
+- Initial Git baseline commit is pending review and explicit project-owner approval.
+- Phase 1 formal sign-off is pending.
+- Phase 2 has not been approved to start.
 
-Do not generate application models or database migrations yet.
-
-First inspect the current workspace and report:
-
-1. Current workspace root.
-2. Existing files and folders.
-3. Git repository status and current branch.
-4. Python version.
-5. Node.js and npm versions.
-6. Docker availability.
-7. PostgreSQL availability, without printing credentials.
-8. Any existing project configuration that must be preserved.
-
-Do not install, delete, overwrite, migrate, commit, or push anything during this inspection.
-
-After reporting the findings, propose the smallest Sprint 1 setup plan and wait for the project owner's approval before making changes.
-
----
+Do not treat these checks as Phase 1 sign-off or authorization to begin Phase 2. Await project-owner review and explicit approval.
 
 ## 13. Final governing principle
 
 **Stay within SocialBoost AI. Stay within the approved phase. Follow the approved architecture. Do not invent scope. Do not make consequential decisions without approval. Implement, test, report, and stop.**
 
 The project owner has final authority over product scope and architecture.
+
+## Document change history
+
+- **1.1** — Corrected the approved custom user model guidance, updated Phase 1 execution status, and aligned branch examples with the roadmap.
+- **1.0** — Baseline project authority.
